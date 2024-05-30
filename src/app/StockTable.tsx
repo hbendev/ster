@@ -35,7 +35,7 @@ export default function StockTable({ query }: StockTableProps) {
         </thead>
 
         <tbody>
-          {isError && !isFetching && (
+          {isError && error && !isFetching && (
             <tr>
               <td colSpan={5}>
                 <p className="text-center text-error">
