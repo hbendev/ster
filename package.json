@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/query-core": "^5.40.0",
+    "@tanstack/react-query": "^5.40.0",
+    "@tanstack/react-query-devtools": "^5.40.0",
     "alphavantage": "^2.5.0",
+    "classix": "^2.1.37",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
@@ -18,6 +22,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "daisyui": "^4.11.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^9.1.0",

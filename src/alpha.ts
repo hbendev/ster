@@ -1,19 +1,23 @@
 import alphavantage from "alphavantage";
 
-let alphaClient: ReturnType<typeof alphavantage>;
+let alpha = global as typeof global & {
+  client: ReturnType<typeof alphavantage>;
+};
 
 function createAlphaClient() {
-  if (alphaClient) {
-    return alphaClient;
+  if (alpha.client) {
+    return alpha.client;
   }
 
   if (!process.env.ALPHAVANTAGE_API_KEY) {
     throw new Error("ALPHAVANTAGE_API_KEY is not set");
   }
 
-  return (alphaClient = alphavantage({
+  return (alpha.client = alphavantage({
     key: process.env.ALPHAVANTAGE_API_KEY,
   }));
 }
 
-export default alphaClient = createAlphaClient();
+createAlphaClient();
+
+export default alpha.client;

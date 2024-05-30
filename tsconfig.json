@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "preserveSymlinks": false, // react-query: https://github.com/TanStack/query/issues/3855
     "plugins": [
       {
         "name": "next"
