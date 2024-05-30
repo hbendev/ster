@@ -1,40 +1,33 @@
+"use client";
+// Ideally, would be server-side rendered as well
+
 import { RawStockQuote } from "@/types/alpha";
 import mergeClasses from "@/util/mergeClasses";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 type TickerDataProps = { symbol: string };
-export default function TickerData({ symbol }: TickerDataProps) {
-  // const { data, isFetching, isError, error } = useQuery<{
-  //   "Global Quote": Partial<RawStockQuote["Global Quote"]>;
-  // }>({
-  //   queryKey: ["stock", symbol],
-  //   queryFn: async () => {
-  //     const url = new URL(`/stock/${symbol}`);
-  //     // const response = await fetch(url);
-  //     return Promise.resolve({ "Global Quote": { "01. symbol": "AAPL" } });
-  //   },
-  // });
 
-  const data: { ["Global Quote"]: Partial<RawStockQuote["Global Quote"]> } = {
-    "Global Quote": {
-      "01. symbol": "IBM",
-      "02. open": "165.5600",
-      "03. high": "166.7300",
-      "04. low": "164.2300",
-      "05. price": "165.6300",
-      "06. volume": "3760037",
-      "07. latest trading day": "2024-05-30",
-      "08. previous close": "167.0500",
-      "09. change": "-1.4200",
-      "10. change percent": "-0.8500%",
+export default function TickerData({ symbol }: TickerDataProps) {
+  const { data, isFetching, isError, error } = useQuery<RawStockQuote>({
+    queryKey: ["stock", symbol],
+    queryFn: async () => {
+      const url = new URL(`/stock/${symbol}/api`);
+      const response = await fetch(url);
+      return response.json();
     },
-  };
+  });
+
   return (
     <section className="mt-8 w-full">
-      {/* {isFetching && (
+      {isFetching && (
         <span className="loading loading-spinner loading-lg mx-auto block"></span>
-      )} */}
+      )}
+      {isError && error && !isFetching && (
+        <p className="text-center text-error">
+          Error loading stock details: {error.message}
+        </p>
+      )}
 
       {data?.["Global Quote"] && (
         <>
