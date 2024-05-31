@@ -13,10 +13,21 @@ export default function StockTable({ query }: StockTableProps) {
   const { data, isFetching, isError, error } = useQuery<RawStockSearch>({
     queryKey: ["stocks", query],
     queryFn: async () => {
-      const url = new URL("/api/search");
+      const url = new URL(`${window.location.origin}/api/search`);
       url.searchParams.append("query", query!);
       const response = await fetch(url);
-      return response.json();
+
+      const data = await response.json();
+
+      if (!data.bestMatches) {
+        throw new Error(
+          (data as { Information?: string })?.Information ??
+            "Couldn't retrieve results from alphavantage.",
+        );
+      }
+      if (response.ok) {
+        return data;
+      }
     },
     enabled: !!query,
   });
@@ -35,7 +46,7 @@ export default function StockTable({ query }: StockTableProps) {
         </thead>
 
         <tbody>
-          {isError && error && !isFetching && (
+          {isError && !isFetching && (
             <tr>
               <td colSpan={5}>
                 <p className="text-center text-error">
@@ -55,24 +66,23 @@ export default function StockTable({ query }: StockTableProps) {
           )}
           {data?.bestMatches?.map((stock) => {
             return (
-              <Link
-                key={stock["1. symbol"]}
-                href={`/stock/${stock["1. symbol"]}`}
-              >
-                <tr>
-                  <th></th>
-                  <td>
-                    {stock["2. name"]}
-                    <br />
-                    <span className="badge badge-ghost badge-sm">
-                      {stock["1. symbol"]}
-                    </span>
-                  </td>
-                  <td>{stock["8. currency"]}</td>
-                  <td>{stock["4. region"]}</td>
-                  <th></th>
-                </tr>
-              </Link>
+              <tr key={stock["1. symbol"]}>
+                <th></th>
+                <td>
+                  {stock["2. name"]}
+                  <br />
+                  <span className="badge badge-ghost badge-sm">
+                    {stock["1. symbol"]}
+                  </span>
+                </td>
+                <td>{stock["8. currency"]}</td>
+                <td>{stock["4. region"]}</td>
+                <th>
+                  <Link className="link" href={`/stock/${stock["1. symbol"]}`}>
+                    View
+                  </Link>
+                </th>
+              </tr>
             );
           })}
         </tbody>

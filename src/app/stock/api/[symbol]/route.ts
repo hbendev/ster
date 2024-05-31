@@ -12,7 +12,17 @@ export async function GET(
     return NextResponse.json({ message: "No symbol" }, { status: 400 });
   }
 
-  const data = await alpha.data.quote(symbol);
+  try {
+    const data = await alpha.data.quote(symbol);
 
-  return NextResponse.json(data, { status: 200 });
+    return NextResponse.json(data, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error ?? "An error occurred while communicating with alphavantage.",
+      },
+      { status: 500 },
+    );
+  }
 }

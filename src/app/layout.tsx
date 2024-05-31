@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import mergeClasses from "@/util/mergeClasses";
 import Providers from "./providers";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,9 @@ export const metadata: Metadata = {
 function Header({ className }: { className?: string }) {
   return (
     <section className={mergeClasses("text-center", className)}>
-      <h1 className="text-xl">STER</h1>
+      <h1 className="text-xl">
+        <Link href="/">STER</Link>
+      </h1>
       <h2 className="text-lg">Simple Stock Tracker</h2>
     </section>
   );

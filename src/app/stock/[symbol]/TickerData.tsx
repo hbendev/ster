@@ -12,10 +12,17 @@ export default function TickerData({ symbol }: TickerDataProps) {
   const { data, isFetching, isError, error } = useQuery<RawStockQuote>({
     queryKey: ["stock", symbol],
     queryFn: async () => {
-      const url = new URL(`/stock/${symbol}/api`);
+      const url = new URL(`${window.location.origin}/stock/api/${symbol}`);
       const response = await fetch(url);
-      return response.json();
+      const data = await response.json();
+
+      if (response.ok) {
+        return data;
+      } else {
+        throw new Error(data?.message ?? "An error occurred");
+      }
     },
+    enabled: !!symbol,
   });
 
   return (
@@ -23,7 +30,7 @@ export default function TickerData({ symbol }: TickerDataProps) {
       {isFetching && (
         <span className="loading loading-spinner loading-lg mx-auto block"></span>
       )}
-      {isError && error && !isFetching && (
+      {isError && !isFetching && (
         <p className="text-center text-error">
           Error loading stock details: {error.message}
         </p>

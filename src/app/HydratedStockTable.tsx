@@ -13,7 +13,14 @@ export default async function HydratedPosts({
     await queryClient.prefetchQuery({
       queryKey: ["stocks", query],
       queryFn: () => {
-        return alpha.data.search(query!);
+        return alpha.data.search(query!).then((data) => {
+          if (!data.bestMatches) {
+            throw new Error(
+              (data as { Information?: string })?.Information ??
+                "Couldn't retrieve results from alphavantage.",
+            );
+          }
+        });
       },
     });
   }

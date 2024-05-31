@@ -10,7 +10,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: "No query" }, { status: 400 });
   }
 
-  const searchData = await alpha.data.search(query!);
+  try {
+    const searchData = await alpha.data.search(query!);
 
-  return NextResponse.json(searchData, { status: 200 });
+    return NextResponse.json(searchData, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error ?? "An error occurred while communicating with alphavantage.",
+      },
+      { status: 500 },
+    );
+  }
 }
